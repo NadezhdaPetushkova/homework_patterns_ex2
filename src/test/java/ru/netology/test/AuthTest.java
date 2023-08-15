@@ -13,6 +13,7 @@ import static ru.netology.data.DataGenerator.Registration.getUser;
 import static ru.netology.data.DataGenerator.getRandomLogin;
 import static ru.netology.data.DataGenerator.getRandomPassword;
 public class AuthTest {
+
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
