@@ -1,16 +1,20 @@
 package ru.netology.data;
 
 import com.github.javafaker.Faker;
-        import io.restassured.builder.RequestSpecBuilder;
-        import io.restassured.filter.log.LogDetail;
-        import io.restassured.http.ContentType;
-        import io.restassured.specification.RequestSpecification;
-        import lombok.Value;
-        import java.util.Locale;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.specification.RequestSpecification;
+import lombok.Value;
 
-        import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.given;
+import io.restassured.http.ContentType;
 
 public class DataGenerator {
+    static Faker faker = new Faker();
+
+    private DataGenerator() {
+    }
+
     private static final RequestSpecification requestSpec = new RequestSpecBuilder()
             .setBaseUri("http://localhost")
             .setPort(9999)
@@ -18,12 +22,9 @@ public class DataGenerator {
             .setContentType(ContentType.JSON)
             .log(LogDetail.ALL)
             .build();
-    private static final Faker faker = new Faker(new Locale("en"));
 
-    private DataGenerator() {
-    }
 
-    private static void sendRequest(RegistrationDto user) {
+    static void sendRequest(RegistrationDto user) {
         given()
                 .spec(requestSpec)
                 .body(user)
@@ -34,12 +35,14 @@ public class DataGenerator {
     }
 
     public static String getRandomLogin() {
-        String login = faker.name().username();
+
+        String login = String.valueOf(faker.name().firstName());
         return login;
     }
 
     public static String getRandomPassword() {
-        String password = faker.internet().password();
+
+        String password = String.valueOf(faker.internet().password());
         return password;
     }
 
@@ -48,13 +51,16 @@ public class DataGenerator {
         }
 
         public static RegistrationDto getUser(String status) {
-            var user = new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
+
+            RegistrationDto user = new RegistrationDto(getRandomLogin(), getRandomPassword(), status);
             return user;
         }
 
         public static RegistrationDto getRegisteredUser(String status) {
-            var registeredUser = getRegisteredUser(status);
+
+            RegistrationDto registeredUser = getUser(status);
             sendRequest(registeredUser);
+
             return registeredUser;
         }
     }
